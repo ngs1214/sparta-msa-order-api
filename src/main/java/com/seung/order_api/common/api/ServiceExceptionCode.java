@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ServiceExceptionCode {
 
-  NOT_FOUND_PRODUCT("NOT_FOUND_PRODUCT", "상품을 찾을 수 없습니다"),
+  NOT_FOUND_ORDER("NOT_FOUND_ORDER", "주문내역을 찾을 수 없습니다"),
   ;
 
   private final String code;
