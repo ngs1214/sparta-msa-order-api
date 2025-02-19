@@ -8,14 +8,14 @@ COPY src src
 RUN chmod +x ./gradlew
 RUN ./gradlew bootJar --no-daemon
 
-FROM openjdk:11-jre-slim
+FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=builder /app/build/libs/*.jar app1.jar
+COPY --from=builder /app/build/libs/*.jar app.jar
 
 RUN mkdir -p /app/logs
 
 ENV SPRING_PROFILES_ACTIVE=prod
-ENV SERVER_PORT=8083
+ENV SERVER_PORT=8082
 
-EXPOSE 8083
-ENTRYPOINT ["java", "-jar", "app1.jar"]
+EXPOSE 8082
+ENTRYPOINT ["java", "-jar", "app.jar"]
