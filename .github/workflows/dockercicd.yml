@@ -23,6 +23,7 @@ jobs:
           - 23306:3306
           - 22181:12181
           - 29092:19092
+          - 8082:8082
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock  # Docker socket 마운트
 
