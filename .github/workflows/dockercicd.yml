@@ -56,6 +56,13 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml up -d
 
+      - name: Wait for services to be ready
+        run: |
+          # Wait for order-api to be ready on port 8082
+          echo "Waiting for the API to be ready..."
+          sleep 30  # Wait for 30 seconds to give the containers time to initialize
+
+
       - name: Run tests 
         run: |
           curl -I http://localhost:8082/orders | grep "200"
