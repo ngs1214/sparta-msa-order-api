@@ -30,6 +30,7 @@ services:
     networks:
       - order-network
       - kafka-network
+      - prometheus-network
 
   zookeeper:
     image: bitnami/zookeeper:latest
@@ -65,11 +66,51 @@ services:
     networks:
       - kafka-network  # 추가된 부분: payment-network와 연결
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - prometheus-network
+    hostname: prometheus    # 호스트 이름 명시적 지정
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3005:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources    # 경로
+    depends_on:
+      - prometheus
+    networks:
+      - prometheus-network
+    restart: always
+
 networks:
   order-network:
     driver: bridge
   kafka-network:
     name: kafka-network
+    driver: bridge
+  prometheus-network:
+    name: prometheus-network
     driver: bridge
 
 volumes:
@@ -78,6 +119,8 @@ volumes:
     driver: local
   kafka_data:
     driver: local
+  prometheus_data:
+  grafana_data:
 
 
 

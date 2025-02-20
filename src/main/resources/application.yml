@@ -21,3 +21,11 @@ springdoc:
   api-docs:
     enabled: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+  metrics:
+    tags:
+      application: order-api
